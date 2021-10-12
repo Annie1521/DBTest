@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="https://www.gstatic.com/firebasejs/8.0.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.2/firebase-database.js"></script>
+
+    <script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyDdECS28f97Ua8h7vw5quYHYWllFKhBPBk",
+        authDomain: "dbtest-601d5.firebaseapp.com",
+        databaseURL: "https://dbtest-601d5-default-rtdb.firebaseio.com",
+        projectId: "dbtest-601d5",
+        storageBucket: "dbtest-601d5.appspot.com",
+        messagingSenderId: "848410941964",
+        appId: "1:848410941964:web:208de0585e2f7e59ba6c29",
+        measurementId: "G-YF4HJ0ZV1L"
+      };
+      firebase.initializeApp(firebaseConfig);  
+      const database=firebase.database();      
+      </script>
+      <Script>
+          const currentUser={
+              user: null,
+              pass: null,
+              userkey: null,
+              passkey: null,
+          }
+            var div=document.createElement("div")  
+            document.body.appendChild(div)  
+            var divlog=document.createElement("div")  
+            document.body.appendChild(divlog)  
+            var divbutton=document.createElement("div")  
+            document.body.appendChild(divbutton)   
+          var btncreate=document.createElement("button")
+          divbutton.appendChild(btncreate)
+            btncreate.innerHTML="Create an account"
+            btncreate.addEventListener("click", function(){
+                divlog.style.display="none"
+                divbutton.style.display="none"
+                var hname=document.createElement("p1")
+                div.appendChild(hname)
+            hname.innerHTML="Enter a username"
+          var input=document.createElement("input")
+          div.appendChild(input)
+            var hpass=document.createElement("p1")
+            div.appendChild(hpass)
+            hpass.innerHTML="Enter a password"
+          var input2=document.createElement("input")
+          div.appendChild(input2)
+            var btnsubmit=document.createElement("button")
+            div.appendChild(btnsubmit)
+            btnsubmit.innerHTML="Submit"
+            btnsubmit.addEventListener("click", function(){
+                divlog.style.display="block"
+                divbutton.style.display="block"
+                 database.ref("/foldername").push({
+              user:input.value,
+                  })  
+                  database.ref("/folderpass").push({
+              pass:input2.value,
+                  })  
+            })
+            database.ref("/").on("value", function(snapshot){
+            var obj=(snapshot.val());
+            console.log(obj)
+            
+        })
+            })
+            var btnlog=document.createElement("button")
+            divbutton.appendChild(btnlog)
+            btnlog.innerHTML="Already have an account log in"
+            btnlog.addEventListener("click", function(){
+                div.style.display="none"
+                divbutton.style.display="none"
+        //         btncreate.addEventListener("click", function(){
+        //         hnamelog.remove()
+        //   inputlog.remove()
+        //   hpasslog.remove()
+        //   input2log.remove()
+        //         hname.remove()
+        //         })
+        //   input.remove()
+        //   hpass.remove()
+        //   input2.remove()
+                var hnamelog=document.createElement("p1")
+                divlog.appendChild(hnamelog)
+            hnamelog.innerHTML="Enter a username"
+          var inputlog=document.createElement("input")
+          divlog.appendChild(inputlog)
+            var hpasslog=document.createElement("p1")
+            divlog.appendChild(hpasslog)
+            hpasslog.innerHTML="Enter a password"
+          var input2log=document.createElement("input")
+          divlog.appendChild(input2log)
+            var btnsubmitlog=document.createElement("button")
+            divlog.appendChild(btnsubmitlog)
+            btnsubmitlog.innerHTML="Login"
+            btnsubmitlog.addEventListener("click",function(){
+            //     database.ref("/foldernamelog").push({
+            //   user:inputlog.value,
+            //       })  
+            //       database.ref("/folderpasslog").push({
+            //   pass:input2log.value,
+            //       })  
+                database.ref("/").once("value", function(snapshot){
+            var user=snapshot.val().foldername;
+            var pass=snapshot.val().folderpass;
+            var obj
+            var passArr=Object.keys(pass)
+            var userArr=Object.keys(user)
+            let check=false;
+            // var userlog=snapshot.val().foldernamelog;
+            // var passlog=snapshot.val().folderpasslog;
+            // var passArrlog=Object.keys(passlog)
+            // var userArrlog=Object.keys(userlog)
+            // alert(inputlog.value)
+            // alert(JSON.stringify(user[userArr[1]]))
+            for(i=0;i<userArr.length;i++){
+                // alert(JSON.stringify(user[userArr[i]]))
+                if(user[userArr[i]].user==inputlog.value&&pass[passArr[i]].pass==input2log.value){
+                    check=true
+                    var thingy=i
+                    currentUser.userkey=userArr[i]
+                    currentUser.passkey=passArr[i]
+
+                }
+                else if(!(user[userArr[i]].user==inputlog.value&&pass[passArr[i]].pass==input2log.value)){
+                    
+                }
+            }
+            if(check){
+                alert("login succesful")
+                currentUser.pass=input2log.value
+                currentUser.user=inputlog.value
+          divlog.style.display="none"
+          var divin=document.createElement("div")  
+            document.body.appendChild(divin)
+            var findname=document.createElement("button")  
+            divin.appendChild(findname)
+            findname.innerHTML="click to see username"
+            findname.addEventListener("click", function(){
+                alert("your username is "+currentUser.user)
+            })
+            var findpass=document.createElement("button")  
+            divin.appendChild(findpass)
+            findpass.addEventListener("click", function(){
+                alert("your password is "+currentUser.pass)
+            })
+            findpass.innerHTML="click to see password"
+            var changePass=document.createElement("button")  
+            divin.appendChild(changePass)
+            changePass.innerHTML="click to change password"
+            changePass.addEventListener("click", function(){
+                newpass=prompt("eneter new password")
+                database.ref(`/folderpass/${currentUser.passkey}`).update({
+                    pass:newpass
+                })
+            })
+            var deleteacc=document.createElement("button")  
+            divin.appendChild(deleteacc)
+            deleteacc.innerHTML="click to delete account"
+            deleteacc.addEventListener("click", function(){
+
+                database.ref(`/foldername/${currentUser.userkey}`).remove()
+                database.ref(`/folderpass/${currentUser.passkey}`).remove()
+                alert("account deleted. Refresh to create a new account or login with a new account")
+                })
+            var logout=document.createElement("button")  
+            divin.appendChild(logout)
+            logout.innerHTML="click to logoutt"
+            logout.addEventListener("click",function(){
+                alert("You have been logged out. Refresh page to log back in.")
+                currentUser.user=null
+                currentUser.pass=null
+                
+            })
+
+            }
+            else if(!(check)){
+                alert("login failed username or password incorrect")
+            }
+        })
+            })
+            })
+          
+
+
+        // //   database.ref("/folder").push({
+        // //       test:"okay2"
+        // //   })                             
+        // database.ref("/").on("value", function(snapshot){
+        //     var obj=(snapshot.val());
+        //     var keysArr=(Object.keys(obj.folder))
+        //     // for(var i=0;i<keysArr.length;i++){
+        //     //     console.log(obj.folder[keysArr[i]])
+        //     // }
+        //     database.ref(`/folder/${keysArr[1]}`).remove()
+            
+        // })
+
+      </Script>
+</body>
+</html>
